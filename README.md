@@ -13,7 +13,7 @@ The Hitbtc SDK for PHP enables PHP developers to use Hitbtc rest trading API in 
 
 ## Installing via Composer
 
-The recommended way to install Guzzle is through
+The recommended way to install hitbtc-php-sdk is through
 [Composer](http://getcomposer.org).
 
 ```bash
@@ -21,7 +21,7 @@ The recommended way to install Guzzle is through
 curl -sS https://getcomposer.org/installer | php
 ```
 
-Next, update your project's composer.json file to include Guzzle:
+Next, update your project's composer.json file to include hitbtc-php-sdk:
 
 ```javascript
 {
