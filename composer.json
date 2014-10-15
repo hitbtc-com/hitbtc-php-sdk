@@ -1,0 +1,19 @@
+{
+    "name": "hitbtc-com/hitbtc_api",
+    "description": "PHP client for https://hitbtc.com",
+    "type" : "library",
+    "minimum-stability": "dev",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "kirill",
+            "email": "email@example.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "5.x"
+    },
+    "autoload": {
+        "psr-0": {"Hitbtc": "src/"}
+    }
+}
