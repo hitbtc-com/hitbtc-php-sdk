@@ -120,7 +120,7 @@ try {
 
 ## Documentation
 
-See the [https://hitbtc.com/api](documentation) for more detail.
+See the [https://hitbtc.com/api](https://hitbtc.com/api) for more detail.
 
 ## License
 
