@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kirill
- * Date: 12.08.14
- * Time: 15:59
- */
 
 namespace Hitbtc;
 
