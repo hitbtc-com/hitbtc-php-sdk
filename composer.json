@@ -1,6 +1,6 @@
 {
-    "name": "hitbtc-com/hitbtc_api",
-    "description": "PHP client for https://hitbtc.com",
+    "name": "hitbtc-com/hitbtc-php-sdk",
+    "description": "HitBTC SDK for PHP",
     "type" : "library",
     "minimum-stability": "dev",
     "license": "MIT",
