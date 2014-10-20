@@ -1,5 +1,5 @@
 # Hitbtc SDK for PHP
-The Hitbtc SDK for PHP enables PHP developers to use Hitbtc rest trading API in their PHP code, and build robust applications and software.
+The HitBTC SDK for PHP enables PHP developers to use HitBTC rest trading API in their PHP code, and build robust applications and software.
 
 ## Features
 * Get trading and main balances
