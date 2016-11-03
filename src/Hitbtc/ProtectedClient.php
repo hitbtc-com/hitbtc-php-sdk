@@ -220,6 +220,30 @@ class ProtectedClient
         throw new InvalidRequestException($response->getBody());
     }
 
+     /**
+     * @param  string                  $clientOrderId
+     * @return Trade[]
+     * @throws InvalidRequestException
+     */
+    public function getTradesByOrder($clientOrderId)
+    {
+        $query = array(
+            'clientOrderId' => $clientOrderId
+        );
+
+        $response = $this->getHttpClient()->get('/api/1/trading/trades/by/order', array('query' => $query, 'exceptions' => false));
+        $document = $response->json();
+        if (isset($document['trades'])) {
+            $trades = [];
+            foreach ($document['trades'] as $tradeData) {
+                $trades[] = new Trade($tradeData);
+            }
+
+            return $trades;
+        }
+        throw new InvalidRequestException($response->getBody());
+    }
+    
     /**
      * @return BalanceTrading[]
      * @throws InvalidRequestException
