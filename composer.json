@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "guzzlehttp/guzzle": "5.x"
+        "guzzlehttp/guzzle": "6.x"
     },
     "autoload": {
         "psr-0": {"Hitbtc": "src/"}
