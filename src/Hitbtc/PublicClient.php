@@ -25,7 +25,7 @@ class PublicClient
     {
         if (!$this->httpClient) {
             $this->httpClient = new HttpClient([
-                'base_url' => $this->host,
+                'base_uri' => $this->host,
             ]);
         }
 
@@ -34,7 +34,12 @@ class PublicClient
 
     public function getTicker($ticker)
     {
-        return $this->getHttpClient()->get('/api/1/public/'.$ticker.'/ticker')->json();
+        return json_decode($this->getHttpClient()->get('/api/1/public/'.$ticker.'/ticker')->getBody(), true);
     }
 
+
+    public function getTickers()
+    {
+        return json_decode($this->getHttpClient()->get('/api/1/public/ticker')->getBody(), true);
+    }
 }
