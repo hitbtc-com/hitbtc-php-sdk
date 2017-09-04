@@ -3,6 +3,8 @@
 namespace Hitbtc;
 
 use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Handler\CurlHandler;
+use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Message\Response;
 use Hitbtc\Exception\InvalidRequestException;
 use Hitbtc\Exception\RejectException;
@@ -45,11 +47,13 @@ class ProtectedClient
     public function getHttpClient()
     {
         if (!$this->httpClient) {
-            $this->httpClient = new HttpClient([
-                'base_url' => $this->host,
-            ]);
-            $this->httpClient->getEmitter()->attach(new AuthSubscriber($this->publicKey, $this->secretKey));
+            $stack = HandlerStack::create();
+            $stack->push(new AuthMiddleware($this->publicKey, $this->secretKey));
 
+            $this->httpClient = new HttpClient([
+                'handler' => $stack,
+                'base_uri' => $this->host,
+            ]);
         }
 
         return $this->httpClient;
@@ -69,7 +73,7 @@ class ProtectedClient
             'body' => $order->asArray(),
             'exceptions' => false,
         ));
-        $document = $response->json();
+        $document = json_decode($response->getBody(), true);
 
         if (isset($document['ExecutionReport'])) {
             if ($document['ExecutionReport']['execReportType'] == 'rejected') {
@@ -105,7 +109,7 @@ class ProtectedClient
             ),
             'exceptions' => false,
         ));
-        $document = $response->json();
+        $document = json_decode($response->getBody(), true);
         if (isset($document['ExecutionReport'])) {
             return new Order($document['ExecutionReport']);
         } elseif (isset($document['CancelReject'])) {
@@ -127,7 +131,7 @@ class ProtectedClient
             $params['query']['symbols'] = implode(',', (array) $symbols);
         }
         $response = $this->getHttpClient()->get('/api/1/trading/orders/active', $params);
-        $document = $response->json();
+        $document = json_decode($response->getBody(), true);
         if (isset($document['orders'])) {
             $orders = [];
             foreach ($document['orders'] as $orderData) {
@@ -164,7 +168,7 @@ class ProtectedClient
         }
 
         $response = $this->getHttpClient()->get('/api/1/trading/orders/recent', array('query' => $query, 'exceptions' => false));
-        $document = $response->json();
+        $document = json_decode($response->getBody(), true);
         if (isset($document['orders'])) {
             $orders = [];
             foreach ($document['orders'] as $orderData) {
@@ -208,7 +212,7 @@ class ProtectedClient
         }
 
         $response = $this->getHttpClient()->get('/api/1/trading/trades', array('query' => $query, 'exceptions' => false));
-        $document = $response->json();
+        $document = json_decode($response->getBody(), true);
         if (isset($document['trades'])) {
             $trades = [];
             foreach ($document['trades'] as $tradeData) {
@@ -232,7 +236,7 @@ class ProtectedClient
         );
 
         $response = $this->getHttpClient()->get('/api/1/trading/trades/by/order', array('query' => $query, 'exceptions' => false));
-        $document = $response->json();
+        $document = json_decode($response->getBody(), true);
         if (isset($document['trades'])) {
             $trades = [];
             foreach ($document['trades'] as $tradeData) {
@@ -251,7 +255,7 @@ class ProtectedClient
     public function getBalanceTrading()
     {
         $response = $this->getHttpClient()->get('/api/1/trading/balance', array('exceptions' => false));
-        $document = $response->json();
+        $document = json_decode($response->getBody(), true);
         if (isset($document['balance'])) {
             $balances = [];
             foreach ($document['balance'] as $balanceData) {
@@ -270,7 +274,7 @@ class ProtectedClient
     public function getBalanceMain()
     {
         $response = $this->getHttpClient()->get('/api/1/payment/balance', array('exceptions' => false));
-        $document = $response->json();
+        $document = json_decode($response->getBody(), true);
         if (isset($document['balance'])) {
             $balances = [];
             foreach ($document['balance'] as $balanceData) {
@@ -295,7 +299,7 @@ class ProtectedClient
         } else {
             $response = $this->getHttpClient()->get('/api/1/payment/address/' . $currency, array('exceptions' => false));
         }
-        $document = $response->json();
+        $document = json_decode($response->getBody(), true);
         if (isset($document['address'])) {
             return $document['address'];
         }
@@ -320,7 +324,7 @@ class ProtectedClient
             ),
             'exceptions' => false
         ));
-        $document = $response->json();
+        $document = json_decode($response->getBody(), true);
         if (isset($document['transaction'])) {
             return $document['transaction'];
         } elseif (isset($document['message'])) {
@@ -376,7 +380,7 @@ class ProtectedClient
             ),
             'exceptions' => false
         ));
-        $document = $response->json();
+        $document = json_decode($response->getBody(), true);
         if (isset($document['transaction'])) {
             return $document['transaction'];
         } elseif (isset($document['message'])) {
@@ -394,7 +398,7 @@ class ProtectedClient
         );
 
         $response = $this->getHttpClient()->get('/api/1/payment/transactions', array('query' => $query, 'exceptions' => false));
-        $document = $response->json();
+        $document = json_decode($response->getBody(), true);
         if (isset($document['transactions'])) {
             $transactions = [];
             foreach ($document['transactions'] as $txn) {
